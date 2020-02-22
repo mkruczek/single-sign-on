@@ -7,13 +7,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static pl.kruczek.singlesignon.model.UserDto.fromEntity;
-
 @Service
-public class UserService  implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
 
@@ -22,26 +22,27 @@ public class UserService  implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-//    public UserEntity addUser(UserDto dto){
-////        boolean isValid = validate(user);
-//
-//        user.setId();
-//
-//
-//    }
-
-    public List<UserDto> getUsers() {
-        return userRepository.getUsers().stream().map(UserDto::fromEntity).collect(Collectors.toList());
-    }
-
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserEntity> user = userRepository.getUser(s);
+        Optional<UserEntity> user = userRepository.getUser(username);
 
-        if (user.isEmpty()){
-            throw new UsernameNotFoundException("Not faund user: " + s);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("Not found user: " + username);
         }
         return new UserAuthentication(user.get());
+    }
+
+    public UserDto getUserById(UUID id) {
+        return userRepository.getUser(id).map(UserDto::fromEntity).orElseThrow(() -> new UsernameNotFoundException("Not found user: " + id));
+    }
+
+    public List<UserDto> getUserByParams(Map<String, String> allParams) {
+
+        if (allParams.isEmpty()) {
+            return userRepository.getUsers().stream().map(UserDto::fromEntity).collect(Collectors.toList());
+        }
+
+        return null;
     }
 }

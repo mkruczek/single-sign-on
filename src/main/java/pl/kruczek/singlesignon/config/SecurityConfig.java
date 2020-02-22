@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -44,16 +43,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.jwtFilter = jwtFilter;
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers("/user").hasAnyRole(UserRole.ADMINISTRATOR.toString(), UserRole.BASIC.toString(), UserRole.MANAGER.toString())
+                .antMatchers(HttpMethod.POST,"/user/**").hasAnyAuthority(UserRole.ADMINISTRATOR.toString(), UserRole.MANAGER.toString())
+                .antMatchers(HttpMethod.PUT,"/user/**").hasAnyAuthority(UserRole.ADMINISTRATOR.toString(), UserRole.MANAGER.toString())
+                .antMatchers(HttpMethod.DELETE,"/user/**").hasAnyAuthority(UserRole.ADMINISTRATOR.toString())
                 .anyRequest().authenticated()
-                .and().sessionManagement()
+                .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

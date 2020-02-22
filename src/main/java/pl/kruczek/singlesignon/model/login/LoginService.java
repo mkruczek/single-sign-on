@@ -6,12 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kruczek.singlesignon.config.jwt.JwtService;
 import pl.kruczek.singlesignon.exception.UserNotFoundException;
-import pl.kruczek.singlesignon.model.UserRole;
 import pl.kruczek.singlesignon.model.UserService;
 import pl.kruczek.singlesignon.model.jwt.JwtResponse;
-
-import java.security.AccessControlException;
-import java.util.stream.Collectors;
 
 @Service
 public class LoginService {
@@ -29,20 +25,18 @@ public class LoginService {
 
     public JwtResponse loginUser(LoginBody loginBody) {
 
-        UserDetails user = userService.loadUserByUsername(loginBody.getLogin());
+        UserDetails userDetails = userService.loadUserByUsername(loginBody.getUsername());
 
-        if (user == null) {
-            throw new UserNotFoundException("lalala");
+        if (userDetails == null) {
+            throw new UserNotFoundException("User Not Found: " + loginBody.getUsername());
+        } else if (!userDetails.isEnabled()) {
+            throw new UserNotFoundException("User No Active");//todo make other exception
         }
 
-        boolean matches = passwordEncoder.matches(loginBody.getPassword(), user.getPassword());
-
-        if (!matches){
-            throw new AccessControlException("You not shal pass");
+        if (!passwordEncoder.matches(loginBody.getPassword(), userDetails.getPassword())){
+            throw new UserNotFoundException("You not shall pass");//todo make other exception
         }
 
-//        return user.getAuthorities().stream().map( r -> UserRole.valueOf(r.toString())).collect(Collectors.toList());
-
-        return new JwtResponse(jwtService.generateToken(user));
+        return new JwtResponse(jwtService.generateToken(userDetails));
     }
 }

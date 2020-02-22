@@ -6,12 +6,12 @@ Develop a REST API microservice for managing users.
 
 Users should be HTTP resources that follow the REST semantics:
 
-    GET /userEntity/ should list all users in the system
-    GET /userEntity/{id} should present the userEntity with given id
-    GET /userEntity/?{key}={value} whould list all users with property being equal value
-    POST /userEntity/ should store new resource
-    PUT /userEntity/{id} should update a resource
-    DELETE /userEntity/{id} should remove a resource
+    GET /user/ should list all users in the system
+    GET /user/{id} should present the userEntity with given id
+    GET /user/?{key}={value} whould list all users with property being equal value
+    POST /user/ should store new resource
+    PUT /user/{id} should update a resource
+    DELETE /user/{id} should remove a resource
 
 Development standard requirements:
 
@@ -25,4 +25,5 @@ Bonus points for:
 
 https://www.youtube.com/watch?v=fjkelzWNSuA
 https://www.youtube.com/watch?v=X80nJ5T7YpE
+https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java
 https://hellokoding.com/scalable-authentication-single-sign-on-out-sso-example-with-json-web-token-jwt-cookie-redis-java-spring-boot-freemarker/

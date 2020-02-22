@@ -26,6 +26,18 @@ public class DataLoader implements ApplicationRunner {
     }
 
     public void run(ApplicationArguments args) {
+
+        UserEntity n = UserEntity.builder()
+                .id(UUID.randomUUID())
+                .username("noactive")
+                .password(passwordEncoder.encode("kochamkruczka"))
+                .firstName("agnieszka")
+                .lastName("jurczyk")
+                .active(false)
+                .email("ajurczyk@nexway.pl")
+                .roles(UserRole.BASIC.toString())
+                .build();
+
         UserEntity b = UserEntity.builder()
                 .id(UUID.randomUUID())
                 .username("user")
@@ -59,6 +71,7 @@ public class DataLoader implements ApplicationRunner {
                 .roles(Strings.join(Arrays.asList(UserRole.ADMINISTRATOR.toString(),UserRole.MANAGER.toString(), UserRole.BASIC.toString()), ';'))
                 .build();
 
+        userRepository.save(n);
         userRepository.save(b);
         userRepository.save(m);
         userRepository.save(a);

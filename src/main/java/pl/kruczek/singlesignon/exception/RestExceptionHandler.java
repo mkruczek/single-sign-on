@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class RestExceptionHandler {
 
     @ExceptionHandler( value = UsernameNotFoundException.class )
-    public ResponseEntity<ExceptionResponse> handleUserNotFoundException() {
+    public ResponseEntity<ExceptionResponse> handleUserNotFoundException(Exception ex) {
         ExceptionResponse er = ExceptionResponse.builder()
                 .status(404)
-                .message("UserNotFoundException")
+                .message(ex.getMessage())
                 .build();
         return new ResponseEntity<ExceptionResponse>(er, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+
+    //todo add rest exceptions
 }
