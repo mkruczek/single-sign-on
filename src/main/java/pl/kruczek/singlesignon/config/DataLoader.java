@@ -26,9 +26,9 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         UserEntity b = UserEntity.builder()
                 .id(UUID.randomUUID())
-                .login("basic")
+                .login("user")
                 .password(passwordEncoder.encode("kochamkruczka"))
-                .firstName("jausz")
+                .firstName("janusz")
                 .lastName("kowalski")
                 .email("jkowalski@nexway.pl")
                 .role(UserRole.BASIC)
@@ -50,7 +50,7 @@ public class DataLoader implements ApplicationRunner {
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstName("michał")
                 .lastName("kruczek")
-                .email("mkrawczyk@nexway.pl")
+                .email("mkruczek@nexway.pl")
                 .role(UserRole.ADMINISTRATOR)
                 .build();
 

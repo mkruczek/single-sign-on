@@ -12,26 +12,26 @@ import java.util.Optional;
 @Service
 public class LoginService {
 
-    UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public boolean loginUser(LoginBody loginBody){
-
-        Optional<UserEntity> user = userRepository.getUser(loginBody.getLogin());
-
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("lalala");
-        }
-
-        boolean matches = passwordEncoder.matches(user.get().getPassword(), loginBody.getPassword());
-
-        return user.get().getPassword().equalsIgnoreCase(loginBody.getPassword());
-
-    }
+//    UserRepository userRepository;
+//    PasswordEncoder passwordEncoder;
+//
+//    @Autowired
+//    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+//        this.userRepository = userRepository;
+//        this.passwordEncoder = passwordEncoder;
+//    }
+//
+//    public boolean loginUser(LoginBody loginBody){
+//
+//        Optional<UserEntity> user = userRepository.getUser(loginBody.getLogin());
+//
+//        if (user.isEmpty()) {
+//            throw new UserNotFoundException("lalala");
+//        }
+//
+//        boolean matches = passwordEncoder.matches(user.get().getPassword(), loginBody.getPassword());
+//
+//        return user.get().getPassword().equalsIgnoreCase(loginBody.getPassword());
+//
+//    }
 }

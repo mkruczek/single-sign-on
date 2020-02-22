@@ -23,3 +23,4 @@ Bonus points for:
 
     implementing authentication mechanism of any kind for non-GET calls (JWT counts double)
 
+https://www.youtube.com/watch?v=fjkelzWNSuA
