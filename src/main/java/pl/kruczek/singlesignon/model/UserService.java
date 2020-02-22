@@ -42,6 +42,6 @@ public class UserService  implements UserDetailsService {
         if (user.isEmpty()){
             throw new UsernameNotFoundException("Not faund user: " + s);
         }
-        return new UserPrincipal(user.get());
+        return new UserAuthentication(user.get());
     }
 }

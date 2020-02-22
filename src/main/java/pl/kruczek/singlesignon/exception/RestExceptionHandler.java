@@ -3,13 +3,14 @@ package pl.kruczek.singlesignon.exception;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler( value = UserNotFoundException.class )
+    @ExceptionHandler( value = UsernameNotFoundException.class )
     public ResponseEntity<ExceptionResponse> handleUserNotFoundException() {
         ExceptionResponse er = ExceptionResponse.builder()
                 .status(404)

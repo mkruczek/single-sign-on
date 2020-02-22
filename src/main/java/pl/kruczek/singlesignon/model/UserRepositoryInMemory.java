@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 public class UserRepositoryInMemory implements UserRepository {
@@ -28,7 +27,7 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public Optional<UserEntity> getUser(String login) {
-        return mapDB.values().stream().filter(x -> x.getLogin().equalsIgnoreCase(login)).findAny();
+        return mapDB.values().stream().filter(x -> x.getUsername().equalsIgnoreCase(login)).findAny();
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 public class UserDto {
     private UUID id;
-    private String login;
+    private String username;
     private String password;
     private String firstName;
     private String lastName;
@@ -18,7 +18,7 @@ public class UserDto {
     public static UserDto fromEntity(UserEntity entity) {
         return UserDto.builder()
                 .id(entity.getId())
-                .login(entity.getLogin())
+                .username(entity.getUsername())
                 .password(entity.getPassword()) //todo delete
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())

@@ -24,3 +24,5 @@ Bonus points for:
     implementing authentication mechanism of any kind for non-GET calls (JWT counts double)
 
 https://www.youtube.com/watch?v=fjkelzWNSuA
+https://www.youtube.com/watch?v=X80nJ5T7YpE
+https://hellokoding.com/scalable-authentication-single-sign-on-out-sso-example-with-json-web-token-jwt-cookie-redis-java-spring-boot-freemarker/

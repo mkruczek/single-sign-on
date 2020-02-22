@@ -7,24 +7,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class UserPrincipal implements UserDetails {
+public class UserAuthentication  implements UserDetails {
 
     private UserEntity userEntity;
 
-    public UserPrincipal(UserEntity userEntity) {
+    public UserAuthentication(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        List<SimpleGrantedAuthority> simpleGrantedAuthorities = Arrays.asList(  new SimpleGrantedAuthority(UserRole.BASIC.toString()),
-                new SimpleGrantedAuthority(UserRole.MANAGER.toString()),
-                new SimpleGrantedAuthority(UserRole.ADMINISTRATOR.toString())
-        );
-
-        return simpleGrantedAuthorities;
+        return Arrays.stream(userEntity.getRoles().split(";"))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,7 +36,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return userEntity.isActive();
     }
 
     @Override

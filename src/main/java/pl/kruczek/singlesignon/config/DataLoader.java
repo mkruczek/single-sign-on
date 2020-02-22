@@ -1,5 +1,6 @@
 package pl.kruczek.singlesignon.config;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -9,6 +10,7 @@ import pl.kruczek.singlesignon.model.UserEntity;
 import pl.kruczek.singlesignon.model.UserRepository;
 import pl.kruczek.singlesignon.model.UserRole;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @Component
@@ -26,32 +28,35 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         UserEntity b = UserEntity.builder()
                 .id(UUID.randomUUID())
-                .login("user")
+                .username("user")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstName("janusz")
                 .lastName("kowalski")
+                .active(true)
                 .email("jkowalski@nexway.pl")
-                .role(UserRole.BASIC)
+                .roles(UserRole.BASIC.toString())
                 .build();
 
         UserEntity m = UserEntity.builder()
                 .id(UUID.randomUUID())
-                .login("manager")
+                .username("manager")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstName("mirek")
                 .lastName("krawczyk")
+                .active(true)
                 .email("mkrawczyk@nexway.pl")
-                .role(UserRole.MANAGER)
+                .roles(Strings.join(Arrays.asList(UserRole.MANAGER.toString(), UserRole.BASIC.toString()), ';'))
                 .build();
 
         UserEntity a = UserEntity.builder()
                 .id(UUID.randomUUID())
-                .login("admin")
+                .username("admin")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstName("michał")
                 .lastName("kruczek")
+                .active(true)
                 .email("mkruczek@nexway.pl")
-                .role(UserRole.ADMINISTRATOR)
+                .roles(Strings.join(Arrays.asList(UserRole.ADMINISTRATOR.toString(),UserRole.MANAGER.toString(), UserRole.BASIC.toString()), ';'))
                 .build();
 
         userRepository.save(b);

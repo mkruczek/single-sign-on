@@ -2,7 +2,6 @@ package pl.kruczek.singlesignon.model;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;
 
@@ -10,10 +9,11 @@ import java.util.UUID;
 @Builder
 public class UserEntity {
     private UUID id;
-    private String login;
+    private String username;
     private String password;
     private String firstName;
     private String lastName;
+    private boolean active;
     private String email;
-    private UserRole role;
+    private String roles;
 }
