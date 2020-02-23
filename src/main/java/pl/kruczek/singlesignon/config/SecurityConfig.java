@@ -17,13 +17,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import pl.kruczek.singlesignon.config.jwt.JwtFilter;
 import pl.kruczek.singlesignon.model.UserRole;
 
+import static pl.kruczek.singlesignon.model.UserRole.ADMINISTRATOR;
+import static pl.kruczek.singlesignon.model.UserRole.MANAGER;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
@@ -47,9 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST,"/user/**").hasAnyAuthority(UserRole.ADMINISTRATOR.toString(), UserRole.MANAGER.toString())
-                .antMatchers(HttpMethod.PUT,"/user/**").hasAnyAuthority(UserRole.ADMINISTRATOR.toString(), UserRole.MANAGER.toString())
-                .antMatchers(HttpMethod.DELETE,"/user/**").hasAnyAuthority(UserRole.ADMINISTRATOR.toString())
+                .antMatchers(HttpMethod.POST,"/user/**").hasAnyAuthority(ADMINISTRATOR.name(), MANAGER.name())
+                .antMatchers(HttpMethod.PUT,"/user/**").hasAnyAuthority(ADMINISTRATOR.name(), MANAGER.name())
+                .antMatchers(HttpMethod.DELETE,"/user/**").hasAnyAuthority(ADMINISTRATOR.name())
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

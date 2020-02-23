@@ -3,6 +3,7 @@ package pl.kruczek.singlesignon.model;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,8 @@ public class UserRepositoryInMemory implements UserRepository {
     Map<UUID, UserEntity> mapDB = new HashMap<>();
 
     @Override
-    public void save(UserEntity userEntity) {
-        mapDB.put(userEntity.getId(), userEntity);
+    public void save(UserEntity... entities) {
+        Arrays.stream(entities).forEach( ue -> mapDB.put(ue.getId(), ue));
     }
 
     @Override

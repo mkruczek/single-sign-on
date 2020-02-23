@@ -42,16 +42,16 @@ public class UserAuthentication  implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return userEntity.isActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return userEntity.isActive();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return userEntity.isActive();
     }
 }

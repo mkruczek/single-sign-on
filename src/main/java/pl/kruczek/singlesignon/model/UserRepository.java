@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
-    public void save(UserEntity userEntity);
+    public void save(UserEntity... entities);
 
     public Optional<UserEntity> getUser(UUID id);
 

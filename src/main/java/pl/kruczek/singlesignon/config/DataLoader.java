@@ -31,8 +31,9 @@ public class DataLoader implements ApplicationRunner {
                 .id(UUID.randomUUID())
                 .username("noactive")
                 .password(passwordEncoder.encode("kochamkruczka"))
-                .firstName("agnieszka")
-                .lastName("jurczyk")
+                .firstname("agnieszka")
+                .lastname("jurczyk")
+                .score(0)
                 .active(false)
                 .email("ajurczyk@nexway.pl")
                 .roles(UserRole.BASIC.toString())
@@ -42,8 +43,9 @@ public class DataLoader implements ApplicationRunner {
                 .id(UUID.randomUUID())
                 .username("user")
                 .password(passwordEncoder.encode("kochamkruczka"))
-                .firstName("janusz")
-                .lastName("kowalski")
+                .firstname("janusz")
+                .lastname("kowalski")
+                .score(80)
                 .active(true)
                 .email("jkowalski@nexway.pl")
                 .roles(UserRole.BASIC.toString())
@@ -53,8 +55,9 @@ public class DataLoader implements ApplicationRunner {
                 .id(UUID.randomUUID())
                 .username("manager")
                 .password(passwordEncoder.encode("kochamkruczka"))
-                .firstName("mirek")
-                .lastName("krawczyk")
+                .firstname("mirek")
+                .lastname("krawczyk")
+                .score(90)
                 .active(true)
                 .email("mkrawczyk@nexway.pl")
                 .roles(Strings.join(Arrays.asList(UserRole.MANAGER.toString(), UserRole.BASIC.toString()), ';'))
@@ -64,16 +67,14 @@ public class DataLoader implements ApplicationRunner {
                 .id(UUID.randomUUID())
                 .username("admin")
                 .password(passwordEncoder.encode("kochamkruczka"))
-                .firstName("michał")
-                .lastName("kruczek")
+                .firstname("michał")
+                .lastname("kruczek")
+                .score(100)
                 .active(true)
                 .email("mkruczek@nexway.pl")
                 .roles(Strings.join(Arrays.asList(UserRole.ADMINISTRATOR.toString(),UserRole.MANAGER.toString(), UserRole.BASIC.toString()), ';'))
                 .build();
 
-        userRepository.save(n);
-        userRepository.save(b);
-        userRepository.save(m);
-        userRepository.save(a);
+        userRepository.save(n,b,m,a);
     }
 }

@@ -3,7 +3,6 @@ package pl.kruczek.singlesignon.model;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,8 +13,9 @@ public class UserDto {
     private UUID id;
     private String username;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
+    private int score;
     private String email;
     private List<UserRole> roles;
 
@@ -23,10 +23,11 @@ public class UserDto {
         return UserDto.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
-                .firstName(entity.getFirstName())
-                .lastName(entity.getLastName())
+                .firstname(entity.getFirstname())
+                .lastname(entity.getLastname())
+                .score(entity.getScore())
                 .email(entity.getEmail())
-                .roles(Arrays.stream(entity.getRoles().split(";")).map(UserRole::valueOf).collect(Collectors.toList()))
+                .roles(entity.splitRoles().stream().map(UserRole::valueOf).collect(Collectors.toList()))
                 .build();
     }
 }

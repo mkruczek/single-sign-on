@@ -3,6 +3,8 @@ package pl.kruczek.singlesignon.model;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -11,9 +13,18 @@ public class UserEntity {
     private UUID id;
     private String username;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
+    private int score;
     private boolean active;
     private String email;
     private String roles;
+
+    public static List<String> allowedParamsToSearch() {
+        return Arrays.asList("id", "username", "firstname", "lastname", "score", "active", "email", "roles");
+    }
+
+    public List<String> splitRoles() {
+        return Arrays.asList(this.getRoles().split(";"));
+    }
 }

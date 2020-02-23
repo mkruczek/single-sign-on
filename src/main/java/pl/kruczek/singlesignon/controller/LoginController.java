@@ -23,15 +23,17 @@ public class LoginController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<?> login(@RequestBody LoginBody loginBody, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody LoginBody loginBody, HttpServletResponse response) {
 
         JwtResponse jwtResponse = loginService.loginUser(loginBody);
-
-        Cookie cookie = new Cookie("jwt", jwtResponse.getJwt());
-        cookie.setMaxAge(24*60*60);
-        response.addCookie(cookie);
-
+        response.addCookie(generateCookie(jwtResponse.getJwt()));
         return ResponseEntity.ok("succes");
+    }
 
+    private Cookie generateCookie(String jwt){
+        Cookie cookie = new Cookie("jwt", jwt);
+        cookie.setMaxAge(24*60*60);
+        return cookie;
     }
 }
+
