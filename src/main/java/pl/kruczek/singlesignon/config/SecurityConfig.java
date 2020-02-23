@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.kruczek.singlesignon.config.jwt.JwtFilter;
-import pl.kruczek.singlesignon.model.UserRole;
 
 import static pl.kruczek.singlesignon.model.UserRole.ADMINISTRATOR;
 import static pl.kruczek.singlesignon.model.UserRole.MANAGER;
@@ -25,25 +24,22 @@ import static pl.kruczek.singlesignon.model.UserRole.MANAGER;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
-    @Bean
     public AuthenticationProvider authProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
     private UserDetailsService userDetailsService;
     private JwtFilter jwtFilter;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
+    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

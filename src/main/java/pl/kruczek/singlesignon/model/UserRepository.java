@@ -9,7 +9,7 @@ public interface UserRepository {
 
     public Optional<UserEntity> getUser(UUID id);
 
-    public Optional<UserEntity> getUser(String login);
+    public Optional<UserEntity> getUser(String username);
 
     public List<UserEntity> getUsers();
 

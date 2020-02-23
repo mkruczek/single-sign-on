@@ -20,10 +20,6 @@ public class UserEntity {
     private String email;
     private String roles;
 
-    public static List<String> allowedParamsToSearch() {
-        return Arrays.asList("id", "username", "firstname", "lastname", "score", "active", "email", "roles");
-    }
-
     public List<String> splitRoles() {
         return Arrays.asList(this.getRoles().split(";"));
     }

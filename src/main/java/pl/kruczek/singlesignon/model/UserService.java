@@ -4,26 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static pl.kruczek.singlesignon.model.UserEntity.allowedParamsToSearch;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
+    private UserValidator userValidator;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserValidator userValidator, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userValidator = userValidator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -38,58 +39,87 @@ public class UserService implements UserDetailsService {
         return userRepository.getUser(id).map(UserDto::fromEntity).orElseThrow(() -> new UsernameNotFoundException("Not found user: " + id));
     }
 
-    public List<UserDto> getUsers(Map<String, String> param) {
+    public List<UserDto> getUsers(SearchQueryUser sq) {
+        List<UserDto> collect = userRepository.getUsers().stream().map(UserDto::fromEntity).collect(Collectors.toList());
 
-        if (param.isEmpty())
-            return userRepository.getUsers().stream().map(UserDto::fromEntity).collect(Collectors.toList());
-
-        if (!paramIsProperly(param)) throw new RuntimeException("ParamNotSupported"); // todo paramNotSupportedException
+        if (sq.isEmpty()) return collect;
 
         List<UserDto> result = new ArrayList<>();
 
-        param.keySet().forEach( kind -> {
-            if (param.get(kind).contains(",")){
-                List<String> queryParams = Arrays.asList(param.get(kind).split(","));
-                queryParams.forEach(p ->{
-                    result.addAll(matchUsers(p, kind));
-                });
-            } else {
-                result.addAll(matchUsers(param.get(kind), kind));
-            }
+        collect.forEach(u -> {
+            checkData(sq, result, u);
         });
+
         return result;
     }
 
-    private List<UserDto> matchUsers(String param, String kind) {
-        return userRepository.getUsers().stream().filter(x -> {
-            switch (kind) {
-                case "id":
-                    return x.getId().toString().equalsIgnoreCase(param);
-                case "username":
-                    return x.getUsername().equalsIgnoreCase(param);
-                case "firstname":
-                    return x.getFirstname().equalsIgnoreCase(param);
-                case "lastname":
-                    return x.getLastname().equalsIgnoreCase(param);
-                case "score":
-                    return String.valueOf(x.getScore()).equalsIgnoreCase(param);
-                case "active":
-                    return String.valueOf(x.isActive()).equalsIgnoreCase(param);
-                case "email":
-                    return x.getEmail().equalsIgnoreCase(param);
-                case "roles":
-                    return x.splitRoles().contains(param);
-                default:
-                    return false;
-            }
-        })
-                .map(UserDto::fromEntity)
-                .collect(Collectors.toList());
+    private void checkData(SearchQueryUser sq, List<UserDto> result, UserDto u) {
+        if (sq.getIds() != null) {
+            if (sq.getIds().stream().anyMatch(uuid -> matchUser(uuid, "id", u))) result.add(u);
+        }
+
+        if (sq.getUsernames() != null) {
+            if (sq.getUsernames().stream().anyMatch(username -> matchUser(username, "username", u))) result.add(u);
+        }
+
+        if (sq.getFirstnames() != null) {
+            if (sq.getFirstnames().stream().anyMatch(firstname -> matchUser(firstname, "firstname", u))) result.add(u);
+        }
+
+        if (sq.getLastnames() != null) {
+            if (sq.getLastnames().stream().anyMatch(lastname -> matchUser(lastname, "lastname", u))) result.add(u);
+        }
+
+        if (sq.getScores() != null) {
+            if (sq.getScores().stream().anyMatch(score -> matchUser(score, "score", u))) result.add(u);
+        }
+
+        if (sq.getActives() != null) {
+            if (sq.getActives().stream().anyMatch(active -> matchUser(active, "active", u))) result.add(u);
+        }
+
+        if (sq.getEmails() != null) {
+            if (sq.getEmails().stream().anyMatch(email -> matchUser(email, "email", u))) result.add(u);
+        }
+
+        if (sq.getRoles() != null) {
+            if (sq.getRoles().stream().anyMatch(roles -> matchUser(roles, "roles", u))) result.add(u);
+        }
     }
 
-    private boolean paramIsProperly(Map<String, String> param) {
-        return param.keySet().stream().anyMatch(k -> {
-            return allowedParamsToSearch().stream().anyMatch(p -> p.equalsIgnoreCase(k));
-        });
+    private boolean matchUser(String param, String kind, UserDto dto) {
+        switch (kind) {
+            case "id":
+                return dto.getId().toString().equalsIgnoreCase(param);
+            case "username":
+                return dto.getUsername().equalsIgnoreCase(param);
+            case "firstname":
+                return dto.getFirstname().equalsIgnoreCase(param);
+            case "lastname":
+                return dto.getLastname().equalsIgnoreCase(param);
+            case "score":
+                return String.valueOf(dto.getScore()).equalsIgnoreCase(param);
+            case "active":
+                return String.valueOf(dto.isActive()).equalsIgnoreCase(param);
+            case "email":
+                return dto.getEmail().equalsIgnoreCase(param);
+            case "roles":
+                return dto.getRoles().contains(UserRole.valueOf(param));
+            default:
+                return false;
+        }
     }
+
+    public UserDto addUser(UserDto dto) {
+
+        userValidator.validateUser(dto);
+
+        UserEntity entityToSave = dto.toEntity();
+        entityToSave.setPassword(passwordEncoder.encode(entityToSave.getPassword()));
+        userRepository.save(entityToSave);
+
+        return UserDto.fromEntity(entityToSave);
+    }
+
+
 }

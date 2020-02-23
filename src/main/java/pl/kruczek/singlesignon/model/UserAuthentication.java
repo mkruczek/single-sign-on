@@ -5,12 +5,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Getter
-public class UserAuthentication  implements UserDetails {
+public class UserAuthentication implements UserDetails {
 
     private UserEntity userEntity;
 
@@ -20,7 +19,7 @@ public class UserAuthentication  implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(userEntity.getRoles().split(";"))
+        return userEntity.splitRoles().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
