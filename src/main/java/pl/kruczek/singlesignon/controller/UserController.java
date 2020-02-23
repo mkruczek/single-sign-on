@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.kruczek.singlesignon.model.SearchQueryUser;
-import pl.kruczek.singlesignon.model.UserDto;
-import pl.kruczek.singlesignon.model.UserService;
+import pl.kruczek.singlesignon.model.user.SearchQueryUser;
+import pl.kruczek.singlesignon.model.user.UserDto;
+import pl.kruczek.singlesignon.model.user.UserService;
 
 import java.util.List;
 import java.util.UUID;
@@ -51,14 +51,13 @@ public class UserController {
     }
 
     @PutMapping(value = "/user/{id}")
-    public UserDto updateUser(@PathVariable String id, @RequestBody UserDto dto) {
-//        return userService.updateUser(dto);
-        return null;
+    public UserDto updateUser(@PathVariable UUID id, @RequestBody UserDto dto) {
+        return userService.updateUser(id, dto);
     }
 
     @DeleteMapping(value = "/user/{id}")
-    public void deleteUser(@PathVariable String id) {
-//        userService.deleteUSer(id);
+    public void deleteUser(@PathVariable UUID id) {
+        userService.deleteUSer(id);
     }
 }
 

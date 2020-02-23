@@ -5,8 +5,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kruczek.singlesignon.config.jwt.JwtService;
-import pl.kruczek.singlesignon.exception.UserNotFoundException;
-import pl.kruczek.singlesignon.model.UserService;
+import pl.kruczek.singlesignon.exception.exceptions.UserNotActiveException;
+import pl.kruczek.singlesignon.exception.exceptions.UserNotFoundException;
+import pl.kruczek.singlesignon.exception.exceptions.UserWrongPasswordException;
+import pl.kruczek.singlesignon.model.user.UserService;
 import pl.kruczek.singlesignon.model.jwt.JwtResponse;
 
 @Service
@@ -30,11 +32,11 @@ public class LoginService {
         if (userDetails == null) {
             throw new UserNotFoundException("User Not Found: " + loginBody.getUsername());
         } else if (!userDetails.isEnabled()) {
-            throw new UserNotFoundException("User No Active");//todo make other exception
+            throw new UserNotActiveException("User No Active: " + loginBody.getUsername());
         }
 
-        if (!passwordEncoder.matches(loginBody.getPassword(), userDetails.getPassword())){
-            throw new UserNotFoundException("You not shall pass");//todo make other exception
+        if (!passwordEncoder.matches(loginBody.getPassword(), userDetails.getPassword())) {
+            throw new UserWrongPasswordException("Wrong Password");
         }
 
         return new JwtResponse(jwtService.generateToken(userDetails));

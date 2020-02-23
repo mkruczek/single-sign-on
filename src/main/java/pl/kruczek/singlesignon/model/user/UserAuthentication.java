@@ -1,4 +1,4 @@
-package pl.kruczek.singlesignon.model;
+package pl.kruczek.singlesignon.model.user;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

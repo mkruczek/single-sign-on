@@ -11,13 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.kruczek.singlesignon.config.jwt.JwtFilter;
 
-import static pl.kruczek.singlesignon.model.UserRole.ADMINISTRATOR;
-import static pl.kruczek.singlesignon.model.UserRole.MANAGER;
+import static pl.kruczek.singlesignon.model.user.UserRole.ADMINISTRATOR;
+import static pl.kruczek.singlesignon.model.user.UserRole.MANAGER;
 
 @Configuration
 @EnableWebSecurity
@@ -44,12 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
+            http.csrf()
+                .disable()
+                .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/**").hasAnyAuthority(ADMINISTRATOR.name(), MANAGER.name())
                 .antMatchers(HttpMethod.PUT,"/user/**").hasAnyAuthority(ADMINISTRATOR.name(), MANAGER.name())
                 .antMatchers(HttpMethod.DELETE,"/user/**").hasAnyAuthority(ADMINISTRATOR.name())
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()

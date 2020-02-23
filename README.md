@@ -1,3 +1,4 @@
+//todo url params with AND, tests, improve update User
 #SINGLE SIGN ON
 
 Managing users via REST API
@@ -23,7 +24,3 @@ Bonus points for:
 
     implementing authentication mechanism of any kind for non-GET calls (JWT counts double)
 
-https://www.youtube.com/watch?v=fjkelzWNSuA
-https://www.youtube.com/watch?v=X80nJ5T7YpE
-https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java
-https://hellokoding.com/scalable-authentication-single-sign-on-out-sso-example-with-json-web-token-jwt-cookie-redis-java-spring-boot-freemarker/
