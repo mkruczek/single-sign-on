@@ -1,4 +1,3 @@
-//todo url params with AND, tests, improve update User
 #SINGLE SIGN ON
 
 Managing users via REST API
