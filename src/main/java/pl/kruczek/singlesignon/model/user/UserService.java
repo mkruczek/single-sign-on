@@ -12,7 +12,6 @@ import pl.kruczek.singlesignon.exception.exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserEntity> user = userRepository.getUser(username);
+        Optional<User> user = userRepository.findAll().stream().filter(u -> u.getUsername().equalsIgnoreCase(username)).findAny();
         if (user.isEmpty()) {
             logger.info("Not found user: " + username);
             throw new UsernameNotFoundException("Not found user: " + username);
@@ -43,14 +42,14 @@ public class UserService implements UserDetailsService {
         return new UserAuthentication(user.get());
     }
 
-    public UserDto getUserById(UUID id) {
-        return userRepository.getUser(id).map(UserDto::fromEntity).orElseThrow(() -> new UserNotFoundException("Not found user: " + id));
+    public UserDto getUserById(String id) {
+        return userRepository.findById(id).map(UserDto::fromEntity).orElseThrow(() -> new UserNotFoundException("Not found user: " + id));
     }
 
     public List<UserDto> getUsers(SearchQueryUser sq) {
 
         if (sq.isEmpty()) {
-            return userRepository.getUsers().stream().map(UserDto::fromEntity).collect(Collectors.toList());
+            return userRepository.findAll().stream().map(UserDto::fromEntity).collect(Collectors.toList());
         }
 
         Predicate<UserDto> username = u -> sq.getUsernames().isEmpty() || sq.getUsernames().contains(u.getUsername());
@@ -61,10 +60,10 @@ public class UserService implements UserDetailsService {
         Predicate<UserDto> lastname = u -> sq.getLastnames().isEmpty() || sq.getLastnames().contains(u.getLastname());
         Predicate<UserDto> active = u -> sq.getActives().isEmpty() || sq.getActives().contains(String.valueOf(u.isActive()));
         Predicate<UserDto> roles = u -> sq.getRoles().isEmpty() || sq.getRoles().stream().anyMatch(r -> {
-            return u.getRoles().stream().anyMatch(ur -> ur.toString().equalsIgnoreCase(r)) ;
+            return u.getRoles().stream().anyMatch(ur -> ur.toString().equalsIgnoreCase(r));
         });
 
-        return userRepository.getUsers().stream().map(UserDto::fromEntity)
+        return userRepository.findAll().stream().map(UserDto::fromEntity)
                 .collect(Collectors.toList())
                 .stream().filter(username
                         .and(id)
@@ -81,7 +80,7 @@ public class UserService implements UserDetailsService {
 
         userValidator.validateUser(dto);
 
-        UserEntity entityToSave = dto.toEntity();
+        User entityToSave = dto.toEntity();
         entityToSave.setPassword(passwordEncoder.encode(entityToSave.getPassword()));
         userRepository.save(entityToSave);
 
@@ -90,20 +89,20 @@ public class UserService implements UserDetailsService {
         return UserDto.fromEntity(entityToSave);
     }
 
-    public UserDto updateUser(UUID id, UserDto dto) {
+    public UserDto updateUser(String id, UserDto dto) {
 
-        UserEntity old = userRepository.getUser(id).orElseThrow(() -> new UserNotFoundException("Not found user: " + id));
+        User old = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Not found user: " + id));
         userValidator.validateUser(dto);
 
         dto.setId(old.getId());
-        UserEntity entityToUpdate = dto.toEntity();
-        userRepository.update(id, entityToUpdate);
+        User entityToUpdate = dto.toEntity();
+        userRepository.save(entityToUpdate);
         logger.info("Update user: " + id);
         return dto;
     }
 
-    public void deleteUSer(UUID id) {
-        userRepository.deleteUser(id);
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
         logger.info("Deleted user: " + id);
     }
 }

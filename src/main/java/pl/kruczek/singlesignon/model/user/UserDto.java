@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class UserDto {
-    private UUID id;
+    private String id;
     private String username;
     private String password;
     private String firstname;
@@ -20,7 +20,7 @@ public class UserDto {
     private String email;
     private List<UserRole> roles;
 
-    public static UserDto fromEntity(UserEntity entity) {
+    public static UserDto fromEntity(User entity) {
         return UserDto.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
@@ -33,9 +33,9 @@ public class UserDto {
                 .build();
     }
 
-    public UserEntity toEntity() {
-        return UserEntity.builder()
-                .id(this.id != null ? this.id : UUID.randomUUID())
+    public User toEntity() {
+        return User.builder()
+                .id(this.id != null ? this.id : String.valueOf(UUID.randomUUID()))
                 .username(this.username)
                 .password(this.password)
                 .firstname(this.username)

@@ -8,8 +8,8 @@ import pl.kruczek.singlesignon.config.jwt.JwtService;
 import pl.kruczek.singlesignon.exception.exceptions.UserNotActiveException;
 import pl.kruczek.singlesignon.exception.exceptions.UserNotFoundException;
 import pl.kruczek.singlesignon.exception.exceptions.UserWrongPasswordException;
-import pl.kruczek.singlesignon.model.user.UserService;
 import pl.kruczek.singlesignon.model.jwt.JwtResponse;
+import pl.kruczek.singlesignon.model.user.UserService;
 
 @Service
 public class LoginService {

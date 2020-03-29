@@ -28,7 +28,7 @@ public class UserValidator {
         boolean validateLastname = validateLastname(dto.getLastname());
         boolean validateRoles = validateRoles(dto.getRoles());
 
-        if (validateUsername&&validatePassword&&validateLastname&&validateRoles){
+        if (validateUsername && validatePassword && validateLastname && validateRoles) {
             logger.info("User body is valid: " + dto.getUsername());
         }
     }
@@ -46,7 +46,7 @@ public class UserValidator {
             throw new ValidateUserException("Username is required.");
         }
 
-        Optional<UserEntity> user = repository.getUser(username);
+        Optional<User> user = repository.findAll().stream().filter(u -> u.getUsername().equalsIgnoreCase(username)).findAny();
         if (user.isPresent()) {
             throw new ValidateUserException("Username already exist.");
         }

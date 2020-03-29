@@ -2,15 +2,18 @@ package pl.kruczek.singlesignon.model.user;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
-public class UserEntity {
-    private UUID id;
+@Document
+public class User {
+    @Id
+    private String id;
     private String username;
     private String password;
     private String firstname;

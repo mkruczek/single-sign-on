@@ -14,7 +14,6 @@ import pl.kruczek.singlesignon.model.user.UserDto;
 import pl.kruczek.singlesignon.model.user.UserService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -41,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/{id}")
-    public UserDto getUser(@PathVariable("id") UUID id) {
+    public UserDto getUser(@PathVariable("id") String id) {
         return userService.getUserById(id);
     }
 
@@ -51,13 +50,13 @@ public class UserController {
     }
 
     @PutMapping(value = "/user/{id}")
-    public UserDto updateUser(@PathVariable UUID id, @RequestBody UserDto dto) {
+    public UserDto updateUser(@PathVariable String id, @RequestBody UserDto dto) {
         return userService.updateUser(id, dto);
     }
 
     @DeleteMapping(value = "/user/{id}")
-    public void deleteUser(@PathVariable UUID id) {
-        userService.deleteUSer(id);
+    public void deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
     }
 }
 
