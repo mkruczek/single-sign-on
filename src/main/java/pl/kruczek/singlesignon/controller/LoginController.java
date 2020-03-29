@@ -30,9 +30,9 @@ public class LoginController {
         return ResponseEntity.ok("succes");
     }
 
-    private Cookie generateCookie(String jwt){
+    private Cookie generateCookie(String jwt) {
         Cookie cookie = new Cookie("jwt", jwt);
-        cookie.setMaxAge(24*60*60);
+        cookie.setMaxAge(24 * 60 * 60);
         return cookie;
     }
 }

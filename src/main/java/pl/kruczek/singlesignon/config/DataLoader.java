@@ -6,7 +6,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.kruczek.singlesignon.model.user.UserEntity;
+import pl.kruczek.singlesignon.model.user.User;
 import pl.kruczek.singlesignon.model.user.UserRepository;
 import pl.kruczek.singlesignon.model.user.UserRole;
 
@@ -27,8 +27,8 @@ public class DataLoader implements ApplicationRunner {
 
     public void run(ApplicationArguments args) {
 
-        UserEntity n = UserEntity.builder()
-                .id(UUID.randomUUID())
+        User n = User.builder()
+                .id(String.valueOf(UUID.randomUUID()))
                 .username("noactive")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstname("agnieszka")
@@ -39,8 +39,8 @@ public class DataLoader implements ApplicationRunner {
                 .roles(UserRole.BASIC.name())
                 .build();
 
-        UserEntity b = UserEntity.builder()
-                .id(UUID.randomUUID())
+        User b = User.builder()
+                .id(String.valueOf(UUID.randomUUID()))
                 .username("user")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstname("janusz")
@@ -51,8 +51,8 @@ public class DataLoader implements ApplicationRunner {
                 .roles(UserRole.BASIC.name())
                 .build();
 
-        UserEntity m = UserEntity.builder()
-                .id(UUID.randomUUID())
+        User m = User.builder()
+                .id(String.valueOf(UUID.randomUUID()))
                 .username("manager")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstname("mirek")
@@ -63,8 +63,8 @@ public class DataLoader implements ApplicationRunner {
                 .roles(Strings.join(Arrays.asList(UserRole.MANAGER.name(), UserRole.BASIC.name()), ';'))
                 .build();
 
-        UserEntity a = UserEntity.builder()
-                .id(UUID.randomUUID())
+        User a = User.builder()
+                .id(String.valueOf(UUID.randomUUID()))
                 .username("admin")
                 .password(passwordEncoder.encode("kochamkruczka"))
                 .firstname("michał")
@@ -75,6 +75,9 @@ public class DataLoader implements ApplicationRunner {
                 .roles(Strings.join(Arrays.asList(UserRole.ADMINISTRATOR.name(),UserRole.MANAGER.name(), UserRole.BASIC.name()), ';'))
                 .build();
 
-        userRepository.save(n,b,m,a);
+        userRepository.save(n);
+        userRepository.save(b);
+        userRepository.save(m);
+        userRepository.save(a);
     }
 }

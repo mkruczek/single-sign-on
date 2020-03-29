@@ -11,46 +11,46 @@ import java.util.stream.Collectors;
 @Getter
 public class UserAuthentication implements UserDetails {
 
-    private UserEntity userEntity;
+    private User user;
 
-    public UserAuthentication(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public UserAuthentication(User user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userEntity.splitRoles().stream()
+        return user.splitRoles().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return userEntity.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userEntity.getUsername();
+        return user.getUsername();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return userEntity.isActive();
+        return user.isActive();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return userEntity.isActive();
+        return user.isActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return userEntity.isActive();
+        return user.isActive();
     }
 
     @Override
     public boolean isEnabled() {
-        return userEntity.isActive();
+        return user.isActive();
     }
 }
